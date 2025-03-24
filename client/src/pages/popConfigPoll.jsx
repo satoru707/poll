@@ -20,6 +20,7 @@ export default function PopConfigPoll({ state, polltype }) {
   const navigate = useNavigate();
 
   //passing QandA with email,pollType.question,options and sharedCode to the database
+  const [loading,setLoading] = useState(false)
   const [option, setOptions] = useState("");
   const [count, setCount] = useState(0);
   const [freeze, setFreeze] = useState(false);
@@ -85,6 +86,7 @@ export default function PopConfigPoll({ state, polltype }) {
       // console.log(QandA);
       // console.log(holdOpt);
     } else {
+      setLoading(true)
       console.log("Done");
       console.log(QandA);
       localStorage.setItem("pollConfig", JSON.stringify(QandA));
@@ -106,6 +108,7 @@ export default function PopConfigPoll({ state, polltype }) {
           navigate("/create-poll");
         }
       } catch (error) {
+        setLoading(false)
         console.log(`Error submitting:  ${error}`);
       }
     }
@@ -120,6 +123,7 @@ export default function PopConfigPoll({ state, polltype }) {
     } else {
       null;
     }
+    setLoading(true)
     try {
       const response = await axios.post(
         "http://localhost:3000/pollconfig",
@@ -139,6 +143,7 @@ export default function PopConfigPoll({ state, polltype }) {
       }
     } catch (error) {
       console.log(`Error submitting:  ${error}`);
+      setLoading(false)
     }
   }
 
@@ -218,7 +223,7 @@ export default function PopConfigPoll({ state, polltype }) {
                   </div>
                 </div>
                 <button
-                  onClick={handleSubmit}
+                  onClick={loading ? null : handleSubmit}
                   type="submit"
                   className="w-8/12 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 transform hover:scale-[1.02]"
                 >
@@ -261,7 +266,7 @@ export default function PopConfigPoll({ state, polltype }) {
                     required
                   />
                   <button
-                    onClick={handleClick}
+                    onClick={loading ? null : handleClick}
                     className="w-1/12 absolute right-1 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 transform hover:scale-[1.02]"
                   >
                     <Send className="w-5 h-5" />

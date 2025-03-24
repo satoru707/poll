@@ -27,9 +27,7 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     setIsLoading(true)
     e.preventDefault();
-    setEmail("");
-    setPassword("");
-
+    
     try {
       const response = await axios.post(
         "http://localhost:3000/login",
@@ -43,9 +41,13 @@ export default function LoginPage() {
         console.log("Login Token stored:", receivedToken);
         navigate("/mainpage");
       }
+      setEmail("");
+      setPassword("");
       setIsLoading(false)
     } catch (error) {
       console.error("Login error:", error);
+      setEmail("");
+      setPassword("");
       setIsLoading(false)
     }
   }

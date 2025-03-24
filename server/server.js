@@ -10,7 +10,7 @@ import axios from "axios";
 import "dotenv/config";
 import process from "process";
 import bcrypt from "bcryptjs";
-
+  // "dev": "concurrently \"vite\" \"nodemon server.js\"",
 import {
   addUser,
   checkUser,

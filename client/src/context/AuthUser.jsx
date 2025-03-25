@@ -8,7 +8,7 @@ export default function AuthUser(props) {
   const [isAuthenticated, setAuthentication] = useState(false);
   const [email, setEmail] = useState();
   const token = sessionStorage.getItem("token");
-
+ 
   useEffect(() => {
     async function authUser() {
       try {

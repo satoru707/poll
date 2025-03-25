@@ -32,7 +32,7 @@ const saltRound = 15;
 
 // CORS configuration for Express
 const corsOptions = {
-  origin: "http://localhost:5173","https://poll-ujpp.vercel.app",
+  origin: "https://poll-ujpp.vercel.app",
   methods: ["GET", "POST"],
   credentials: true,
   optionsSuccessStatus: 200,
@@ -402,7 +402,7 @@ server = app.listen(port, () => {
 
 io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://poll-ujpp.vercel.app/",
     methods: ["GET", "POST"],
   },
 });

@@ -22,7 +22,7 @@ export default function ViewPoll() {
     async function senPin() {
       try {
         const response = await axios.post(
-          "http://localhost:3000/pollData",
+          "https://polldeew32.onrender.com/pollData",
 
           { user: user, code: send },
           {
@@ -49,7 +49,7 @@ export default function ViewPoll() {
   async function handlePin() {
     try {
       const pollDataquery = await axios.post(
-        "http://localhost:3000/pollData",
+        "https://polldeew32.onrender.com/pollData",
         { code: send, user: user },
         {
           headers: { Authorization: `Bearer ${token}` },

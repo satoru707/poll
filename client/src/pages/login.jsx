@@ -30,7 +30,7 @@ export default function LoginPage() {
     
     try {
       const response = await axios.post(
-        "http://localhost:3000/login",
+        "https://polldeew32.onrender.com/login",
         { email, password },
         { withCredentials: true }
       );
@@ -55,7 +55,7 @@ export default function LoginPage() {
   // Handle Google OAuth Login
   async function handleGoogleAuth() {
     try {
-      const response = await axios.get("http://localhost:3000/auth/google", {
+      const response = await axios.get("https://polldeew32.onrender.com/auth/google", {
         withCredentials: true,
       });
       window.location.href = response.data.url; // Redirect user to Google login

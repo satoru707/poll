@@ -12,7 +12,7 @@ export default function AuthUser(props) {
   useEffect(() => {
     async function authUser() {
       try {
-        const response = await axios.get("http://localhost:3000/user", {
+        const response = await axios.get("https://polldeew32.onrender.com/user", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

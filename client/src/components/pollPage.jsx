@@ -24,7 +24,7 @@ export default function PollSelection(props) {
     const [copy, setCopy] = useState();
     //from here
     useEffect(() => {
-      const socket = io("http://localhost:3000", {
+      const socket = io("https://polldeew32.onrender.com", {
         auth: {
           token: sessionStorage.getItem("token"),
         },
@@ -58,7 +58,7 @@ export default function PollSelection(props) {
         setCopy(pollConfi.codelink);
         const token = sessionStorage.getItem("token");
         const response = await axios.post(
-          "http://localhost:3000/votes",
+          "https://polldeew32.onrender.com/votes",
 
           { code: query.codelink || pollConfi.shareCode },
           {
@@ -87,7 +87,7 @@ export default function PollSelection(props) {
       async function saveop() {
         try {
           const response = await axios.post(
-            "http://localhost:3000/saveOption",
+            "https://polldeew32.onrender.com/saveOption",
 
             {
               email: email,

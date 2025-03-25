@@ -92,7 +92,7 @@ export default function PopConfigPoll({ state, polltype }) {
       localStorage.setItem("pollConfig", JSON.stringify(QandA));
       try {
         const response = await axios.post(
-          "http://localhost:3000/pollconfig",
+          "https://polldeew32.onrender.com/pollconfig",
 
           { QandA: QandA },
           {
@@ -126,7 +126,7 @@ export default function PopConfigPoll({ state, polltype }) {
     setLoading(true)
     try {
       const response = await axios.post(
-        "http://localhost:3000/pollconfig",
+        "https://polldeew32.onrender.com/pollconfig",
 
         { QandA: QandA },
         {

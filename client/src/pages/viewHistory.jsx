@@ -20,7 +20,7 @@ export default function DisplayedHistory() {
     const token = sessionStorage.getItem("token");
     async function gettingit() {
       const response = await axios.post(
-        "http://localhost:3000/getHistory",
+        "https://polldeew32.onrender.com/getHistory",
 
         { email: email, type: type },
         {
@@ -50,7 +50,7 @@ export default function DisplayedHistory() {
     async function handleClick(code) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/pollData",
+          "https://polldeew32.onrender.com/pollData",
 
           { user: email, code: code },
           {

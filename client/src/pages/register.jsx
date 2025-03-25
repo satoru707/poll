@@ -23,7 +23,7 @@ export default function RegisterPage() {
 
   async function handleGoogleAuth() {
     try {
-      const response = await axios.get("http://localhost:3000/auth/google", {
+      const response = await axios.get("https://polldeew32.onrender.com/auth/google", {
         withCredentials: true,
       });
       const url = response.data.url;
@@ -49,7 +49,7 @@ export default function RegisterPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/register",
+        "https://polldeew32.onrender.com/register",
         {
           email: email,
           password: password,

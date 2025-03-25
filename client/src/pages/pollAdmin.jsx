@@ -24,7 +24,7 @@ export default function PollAdmin() {
       setCopy(pollConfi.codelink || pollConfi.shareCode);
       const token = sessionStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/votes",
+        "https://polldeew32.onrender.com/votes",
 
         { code: pollConfi.shareCode || pollConfi.codelink },
         {
@@ -47,7 +47,7 @@ export default function PollAdmin() {
 
   useEffect(() => {
     sessionStorage.getItem("token");
-    const socket = io("http://localhost:3000", {
+    const socket = io("https://polldeew32.onrender.com", {
       auth: {
         token: sessionStorage.getItem("token"),
       },

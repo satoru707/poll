@@ -21,7 +21,7 @@ export default function MainPage() {
   async function logout() {
     try {
       const response = await axios.post(
-        "http://localhost:3000/logout",
+        "https://polldeew32.onrender.com/logout",
         {},
         {
           withCredentials: true,
@@ -43,7 +43,7 @@ export default function MainPage() {
 
       async function finallydone() {
         const response = await axios.post(
-          "http://localhost:3000/checkPremium",
+          "https://polldeew32.onrender.com/checkPremium",
 
           { user: jwtDecode(token).email },
           {

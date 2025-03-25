@@ -21,7 +21,7 @@ export default function PaymentTile() {
     try {
       // Step 1: Initialize Payment
       const response = await axios.post(
-        "http://localhost:3000/initialize-payment",
+        "https://polldeew32.onrender.com/initialize-payment",
         {
           email: user,
         },
@@ -58,7 +58,7 @@ export default function PaymentTile() {
         try {
           setIsLoading(true);
           const response = await axios.get(
-            `http://localhost:3000/verify-payment/${reference}`,
+            `https://polldeew32.onrender.com/verify-payment/${reference}`,
             {
               headers: { Authorization: `Bearer ${token}` },
               withCredentials: true,
@@ -69,7 +69,7 @@ export default function PaymentTile() {
           if (response.data.data.status === "success") {
             alert("Payment successful!.");
             await axios.post(
-              "http://localhost:3000/premium-user",
+              "https://polldeew32.onrender.com/premium-user",
               {
                 email: user,
               },
@@ -79,7 +79,7 @@ export default function PaymentTile() {
               }
             );
             const response = await axios.post(
-              "http://localhost:3000/checkPremium",
+              "https://polldeew32.onrender.com/checkPremium",
 
               { user: user },
               {

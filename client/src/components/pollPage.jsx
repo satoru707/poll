@@ -350,10 +350,10 @@ export default function PollSelection(props) {
                 {pollConfig.question}
               </p>
               <p className="text-gray-300 font-semibold">
-                {votes.length}{" "}
-                {votes.length == 1
-                  ? "votes"
-                  : votes.length > 1
+                {votes.filter(each => each.choice).length}{" "}
+                {votes.filter(each => each.choice).length == 1
+                  ? "vote"
+                  : votes.filter(each => each.choice).length > 1
                   ? "votes"
                   : null}
               </p>

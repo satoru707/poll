@@ -20,6 +20,8 @@ export default function MainPage() {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   async function logout() {
+    sessionStorage.clear()
+    localStorage.clear()
     try {
       const response = await axios.post(
         `${BACKEND_URL}/logout`,
@@ -31,9 +33,8 @@ export default function MainPage() {
 
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("premium");
-      if (response.data.message === "Logout") {
         navigate("/login");
-      }
+        console.log(response.data);        
     } catch (error) {
       console.error("Logout failed:", error);
       alert("Logout failed. Please try again.");

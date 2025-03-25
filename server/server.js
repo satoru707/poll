@@ -32,7 +32,7 @@ const saltRound = 15;
 
 // CORS configuration for Express
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "http://localhost:5173","https://poll-ujpp.vercel.app",
   methods: ["GET", "POST"],
   credentials: true,
   optionsSuccessStatus: 200,
@@ -53,7 +53,7 @@ app.use(
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = "http://localhost:3000/auth/google/callback";
+const REDIRECT_URI = "https://poll-ujpp.vercel.app/auth/google/callback";
 const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 //paystack key
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
@@ -68,7 +68,7 @@ app.post("/initialize-payment", authenticateToken, async (req, res) => {
       {
         email,
         amount: amount * 100, // Paystack expects amount in kobo (1 NGN = 100 kobo)
-        callback_url: "http://localhost:5173/payment",
+        callback_url: "https://poll-ujpp.vercel.app/payment",
       },
       {
         headers: {
@@ -222,7 +222,7 @@ app.get("/auth/google/callback", async (req, res) => {
         console.log(error);
       }
     }
-    return res.redirect(`http://localhost:5173/login?token=${token}`);
+    return res.redirect(`https://poll-ujpp.vercel.app/login?token=${token}`);
   } catch (error) {
     console.error("Authentication error:", error.message);
     return res.status(500).send("Authentication failed");

@@ -18,8 +18,9 @@ export default function PopConfigPoll({ state, polltype }) {
   const token = sessionStorage.getItem("token");
   const email = useContext(Context)[0];
   const navigate = useNavigate();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-  //passing QandA with email,pollType.question,options and sharedCode to the database
+  // [All existing state declarations remain exactly the same...]
   const [loading,setLoading] = useState(false)
   const [option, setOptions] = useState("");
   const [count, setCount] = useState(0);
@@ -39,6 +40,7 @@ export default function PopConfigPoll({ state, polltype }) {
   });
   const [holdOpt, setHoldOpt] = useState([]);
 
+  // [All existing useEffect hooks remain exactly the same...]
   useEffect(() => {
     function callack() {
       if (count > 2) {
@@ -71,7 +73,7 @@ export default function PopConfigPoll({ state, polltype }) {
     "Third option",
     "Fourth option",
   ];
-  // console.log(polltype);
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (option.trim() === "") {
@@ -82,9 +84,6 @@ export default function PopConfigPoll({ state, polltype }) {
       setCount((prev) => prev + 1);
       setHoldOpt((prev) => [...prev, option]);
       setOptions("");
-      // console.log(count);
-      // console.log(QandA);
-      // console.log(holdOpt);
     } else {
       setLoading(true)
       console.log("Done");
@@ -92,8 +91,7 @@ export default function PopConfigPoll({ state, polltype }) {
       localStorage.setItem("pollConfig", JSON.stringify(QandA));
       try {
         const response = await axios.post(
-          "https://polldeew32.onrender.com/pollconfig",
-
+          `${BACKEND_URL}/pollconfig`,
           { QandA: QandA },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -102,11 +100,11 @@ export default function PopConfigPoll({ state, polltype }) {
         );
 
         console.log("response");
-        if (response.data.message == "done") {
+        console.log(response);
+        
+        
           navigate("/poll-admin");
-        } else {
-          navigate("/create-poll");
-        }
+     
       } catch (error) {
         setLoading(false)
         console.log(`Error submitting:  ${error}`);
@@ -126,8 +124,7 @@ export default function PopConfigPoll({ state, polltype }) {
     setLoading(true)
     try {
       const response = await axios.post(
-        "https://polldeew32.onrender.com/pollconfig",
-
+        `${BACKEND_URL}/pollconfig`,
         { QandA: QandA },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -136,17 +133,16 @@ export default function PopConfigPoll({ state, polltype }) {
       );
       localStorage.setItem("pollConfig", JSON.stringify(QandA));
       console.log("response");
-      if (response.data.message == "done") {
+      console.log(response);
+      
         navigate("/poll-admin");
-      } else {
-        navigate("/create-poll");
-      }
     } catch (error) {
       console.log(`Error submitting:  ${error}`);
       setLoading(false)
     }
   }
 
+  // [All existing JSX remains exactly the same...]
   return (
     <div>
       {polltype === "single choice" || polltype === "multiple choice" ? (
@@ -200,8 +196,6 @@ export default function PopConfigPoll({ state, polltype }) {
                 </button>
               </div>
 
-              {/* a new input appeasrs when I submit one,till the four of em come and go */}
-
               <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
                 <div className="text-center mb-8">
                   <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -223,7 +217,7 @@ export default function PopConfigPoll({ state, polltype }) {
                   </div>
                 </div>
                 <button
-                  onClick={loading ? null : handleSubmit}
+                  onClick={ handleSubmit}
                   type="submit"
                   className="w-8/12 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 transform hover:scale-[1.02]"
                 >
@@ -266,7 +260,7 @@ export default function PopConfigPoll({ state, polltype }) {
                     required
                   />
                   <button
-                    onClick={loading ? null : handleClick}
+                    onClick={ handleClick}
                     className="w-1/12 absolute right-1 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 transform hover:scale-[1.02]"
                   >
                     <Send className="w-5 h-5" />

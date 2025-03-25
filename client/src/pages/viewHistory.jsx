@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Context from "../context/context";
 import axios from "axios";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 export default function DisplayedHistory() {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
@@ -20,8 +22,7 @@ export default function DisplayedHistory() {
     const token = sessionStorage.getItem("token");
     async function gettingit() {
       const response = await axios.post(
-        "https://polldeew32.onrender.com/getHistory",
-
+        `${backendUrl}/getHistory`,
         { email: email, type: type },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -50,8 +51,7 @@ export default function DisplayedHistory() {
     async function handleClick(code) {
       try {
         const response = await axios.post(
-          "https://polldeew32.onrender.com/pollData",
-
+          `${backendUrl}/pollData`,
           { user: email, code: code },
           {
             headers: { Authorization: `Bearer ${token}` },

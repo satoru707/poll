@@ -1,6 +1,6 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     dateCreated TIMESTAMP,
     premium VARCHAR(255)
@@ -11,10 +11,10 @@ CREATE TABLE pollDataC (
     pollType VARCHAR(25),
     question VARCHAR(255) NOT NULL,
     options TEXT[],
-    codeLink TEXT,
+    codeLink TEXT UNIQUE,
     dateCreated TIMESTAMP,
     user_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
 );
 
 CREATE TABLE pollDataP (
@@ -26,5 +26,6 @@ CREATE TABLE pollDataP (
     dateVoted TIMESTAMP,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY(poll_id) REFERENCES pollDataC(id)
+    FOREIGN KEY(poll_id) REFERENCES pollDataC(id),
+    UNIQUE(user_id,poll_id)
 );

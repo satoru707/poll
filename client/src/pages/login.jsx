@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { User, Lock, Mail, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom"; // Fixed import
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -9,58 +9,54 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   // Handle Google Auth Token from URL
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = urlParams.get("token");
-    console.log(tokenFromUrl);
 
     if (tokenFromUrl) {
-      sessionStorage.setItem("token", tokenFromUrl); // Store before setting state
-      console.log("Google Auth Token stored:", tokenFromUrl);
-      navigate("/mainpage"); // Navigate after storing token
+      sessionStorage.setItem("token", tokenFromUrl);
+      navigate("/mainpage");
     }
   }, [navigate]);
 
   // Handle Login Submission
   async function handleSubmit(e) {
-    setIsLoading(true)
     e.preventDefault();
+    setIsLoading(true);
     
     try {
       const response = await axios.post(
-        "https://polldeew32.onrender.com/login",
+        `${BACKEND_URL}/login`,
         { email, password },
-        { withCredentials: true }
       );
 
-      const receivedToken = response.data.token;
-      if (receivedToken) {
-        sessionStorage.setItem("token", receivedToken); // Store immediately
-        console.log("Login Token stored:", receivedToken);
+      if (response.data.token) {
+        sessionStorage.setItem("token", response.data.token);
         navigate("/mainpage");
       }
-      setEmail("");
-      setPassword("");
-      setIsLoading(false)
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login error:", error.response?.data?.message || error.message);
+      alert(error.response?.data?.message || "Login failed. Please try again.");
+    } finally {
       setEmail("");
       setPassword("");
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   // Handle Google OAuth Login
   async function handleGoogleAuth() {
     try {
-      const response = await axios.get("https://polldeew32.onrender.com/auth/google", {
+      const response = await axios.get(`${BACKEND_URL}/auth/google`, {
         withCredentials: true,
       });
-      window.location.href = response.data.url; // Redirect user to Google login
+      window.location.href = response.data.url;
     } catch (error) {
       console.error("Google Auth error:", error);
+      alert("Google authentication failed. Please try again.");
     }
   }
 
@@ -103,9 +99,12 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 transform hover:scale-[1.02]"
+              disabled={isLoading}
+              className={`w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 transform hover:scale-[1.02] ${
+                isLoading ? "opacity-70 cursor-not-allowed" : "hover:from-purple-600 hover:to-pink-600"
+              }`}
             >
-              <span>{isLoading ? 'Loading...' : 'Sign In' }</span>
+              <span>{isLoading ? 'Loading...' : 'Sign In'}</span>
               <ArrowRight className="w-5 h-5" />
             </button>
 
@@ -123,7 +122,8 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={handleGoogleAuth}
-              className="w-full bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]"
+              disabled={isLoading}
+              className="w-full bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
             >
               <img
                 src="https://www.google.com/favicon.ico"

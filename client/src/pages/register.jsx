@@ -4,6 +4,8 @@ import { User, Lock, Mail, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import axios from "axios";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -23,7 +25,7 @@ export default function RegisterPage() {
 
   async function handleGoogleAuth() {
     try {
-      const response = await axios.get("https://polldeew32.onrender.com/auth/google", {
+      const response = await axios.get(`${backendUrl}/auth/google`, {
         withCredentials: true,
       });
       const url = response.data.url;
@@ -44,12 +46,10 @@ export default function RegisterPage() {
     setIsLoading(true)
     e.preventDefault();
     // console.log("Register attempted:", { email, password });
-    setEmail("");
-    setPassword("");
 
     try {
       const response = await axios.post(
-        "https://polldeew32.onrender.com/register",
+        `${backendUrl}/register`,
         {
           email: email,
           password: password,
@@ -59,12 +59,16 @@ export default function RegisterPage() {
       const token = response.data.token;
       // console.log("token");
       // console.log(token);
+      setEmail("");
+      setPassword("");
 
       await sessionStorage.setItem("token", token);
       navigate("/mainpage");
     } catch (error) {
       console.log(`Error registering: ${error}`);
       setIsLoading(false)
+      setEmail("");
+      setPassword("");
     }
   }
 

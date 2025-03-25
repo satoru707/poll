@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router";
+import { Route, Routes, Navigate } from "react-router";
 import LoginForm from "./pages/login";
 import RegisterForm from "./pages/register";
 import MainPage from "./pages/mainOptions";
@@ -17,8 +17,8 @@ export default function App() {
   console.log(user);
 
   return (
-    <BrowserRouter>
-      {" "}
+  
+    
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
 
@@ -90,6 +90,6 @@ export default function App() {
           />
         )}
       </Routes>
-    </BrowserRouter>
+ 
   );
 }

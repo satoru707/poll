@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Context from "../context/context";
 import axios from "axios";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 export default function PaymentTile() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function PaymentTile() {
     try {
       // Step 1: Initialize Payment
       const response = await axios.post(
-        "https://polldeew32.onrender.com/initialize-payment",
+        `${backendUrl}/initialize-payment`,
         {
           email: user,
         },
@@ -58,7 +60,7 @@ export default function PaymentTile() {
         try {
           setIsLoading(true);
           const response = await axios.get(
-            `https://polldeew32.onrender.com/verify-payment/${reference}`,
+            `${backendUrl}/verify-payment/${reference}`,
             {
               headers: { Authorization: `Bearer ${token}` },
               withCredentials: true,
@@ -69,7 +71,7 @@ export default function PaymentTile() {
           if (response.data.data.status === "success") {
             alert("Payment successful!.");
             await axios.post(
-              "https://polldeew32.onrender.com/premium-user",
+              `${backendUrl}/premium-user`,
               {
                 email: user,
               },
@@ -79,8 +81,7 @@ export default function PaymentTile() {
               }
             );
             const response = await axios.post(
-              "https://polldeew32.onrender.com/checkPremium",
-
+              `${backendUrl}/checkPremium`,
               { user: user },
               {
                 headers: { Authorization: `Bearer ${token}` },

@@ -14,6 +14,9 @@ export default function PollSelection(props) {
   console.log("query");
   console.log(query);
 
+  // Get backend URL from environment variables with localhost fallback
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
   function Poll({ query }) {
     const [choice, setChoice] = useState();
     const [single, setSingle] = useState();
@@ -22,9 +25,9 @@ export default function PollSelection(props) {
     const [pollConfig, setPollConfig] = useState({});
     const [votes, setVotes] = useState([]);
     const [copy, setCopy] = useState();
-    //from here
+
     useEffect(() => {
-      const socket = io("https://polldeew32.onrender.com", {
+      const socket = io(BACKEND_URL, {
         auth: {
           token: sessionStorage.getItem("token"),
         },
@@ -58,8 +61,7 @@ export default function PollSelection(props) {
         setCopy(pollConfi.codelink);
         const token = sessionStorage.getItem("token");
         const response = await axios.post(
-          "https://polldeew32.onrender.com/votes",
-
+          `${BACKEND_URL}/votes`,
           { code: query.codelink || pollConfi.shareCode },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -87,8 +89,7 @@ export default function PollSelection(props) {
       async function saveop() {
         try {
           const response = await axios.post(
-            "https://polldeew32.onrender.com/saveOption",
-
+            `${BACKEND_URL}/saveOption`,
             {
               email: email,
               choice: single || multiple,
@@ -108,6 +109,7 @@ export default function PollSelection(props) {
       single || multiple.length > 0 ? saveop() : null;
       //listen for the emit and setVotes
     }, [choice, single, multiple]);
+
     function handleMultiple(option) {
       console.log(option), console.log(multiple);
       const exist = multiple.filter((i) => i == option);
@@ -118,17 +120,20 @@ export default function PollSelection(props) {
         setMultiple((prev) => [...prev, option]);
       }
     }
+
     function yesorno(array, y) {
       return array.filter((item) => item.choice === y).length;
     }
+
     function handleSubmit() {
       console.log("Selected option");
-
       console.log(choice);
     }
+
     if (!props.state) {
       return null;
     }
+
     async function handleCopy() {
       try {
         await navigator.clipboard.writeText(copy);
@@ -148,10 +153,11 @@ export default function PollSelection(props) {
         return false;
       });
     }
+
     function multiplex(objectsArray, searchString) {
       return objectsArray.filter((item) => {
         try {
-          const parsedChoice = JSON.parse(item.choice); // Double parse to extract the actual array
+          const parsedChoice = JSON.parse(item.choice);
           return parsedChoice.includes(searchString);
         } catch (error) {
           console.error("Error parsing choice:", error);
@@ -162,22 +168,15 @@ export default function PollSelection(props) {
 
     console.log(pollConfi);
     console.log(query);
-
     console.log("votes");
     console.log(votes);
-    // console.log([
-    //   multiplex(votes, pollConfig?.options[0] || query?.options[0]),
-    //   multiplex(votes, pollConfig?.options[1] || query?.options[1]),
-    //   multiplex(votes, pollConfig?.options[2] || query?.options[2]),
-    //   multiplex(votes, pollConfig?.options[3] || query?.options[3]),
-    // ]);
 
     const data = {
       labels:
         pollConfig.polltype === "single choice" ||
         pollConfig.polltype === "multiple choice"
           ? pollConfig.options
-          : ["YES", "NO"], //options
+          : ["YES", "NO"],
       datasets: [
         {
           label: "Poll Results",
@@ -245,7 +244,6 @@ export default function PollSelection(props) {
         <HomePage />
         <div className="w-full max-w-md mx-auto">
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-            {/* Title Section */}
             <div className="text-center mb-8">
               <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:scale-105 transition-transform duration-300">
                 <Vote className="w-8 h-8 text-white" />
@@ -256,7 +254,6 @@ export default function PollSelection(props) {
               <p className="text-gray-300">{query.question}</p>
             </div>
 
-            {/* Poll Options */}
             {query.polltype === "single choice" ? (
               <div className="space-y-4">
                 {query.options.map((option, index) => (
@@ -337,7 +334,6 @@ export default function PollSelection(props) {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
             <div className="text mb-8">
               <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:scale-105 transition-transform duration-300">
-                {/* Open or close voting poll*/}
                 <button>
                   <Vote className="w-8 h-8 text-white" />
                 </button>

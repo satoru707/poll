@@ -6,6 +6,8 @@ import PollSelection from "../components/pollPage";
 import axios from "axios";
 import Context from "../context/context";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 export default function ViewPoll() {
   const user = useContext(Context)[0];
   const token = sessionStorage.getItem("token");
@@ -22,8 +24,7 @@ export default function ViewPoll() {
     async function senPin() {
       try {
         const response = await axios.post(
-          "https://polldeew32.onrender.com/pollData",
-
+          `${backendUrl}/pollData`,
           { user: user, code: send },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -49,7 +50,7 @@ export default function ViewPoll() {
   async function handlePin() {
     try {
       const pollDataquery = await axios.post(
-        "https://polldeew32.onrender.com/pollData",
+        `${backendUrl}/pollData`,
         { code: send, user: user },
         {
           headers: { Authorization: `Bearer ${token}` },

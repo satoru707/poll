@@ -7,47 +7,34 @@ import axios from "axios";
 import { io } from "socket.io-client";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-//using socket for getting
 export default function PollAdmin() {
   const [pollConfig, setPollConfig] = useState({});
   const [votes, setVotes] = useState([]);
   const [copy, setCopy] = useState();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   useEffect(() => {
     const pollConfi = JSON.parse(localStorage.getItem("pollConfig"));
     async function data() {
-      console.log("Error i guess");
-      console.log(pollConfig);
-      console.log(localStorage.getItem("pollConfig"));
-
       setPollConfig(pollConfi);
       setCopy(pollConfi.codelink || pollConfi.shareCode);
       const token = sessionStorage.getItem("token");
       const response = await axios.post(
-        "https://polldeew32.onrender.com/votes",
-
+        `${BACKEND_URL}/votes`,
         { code: pollConfi.shareCode || pollConfi.codelink },
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
-      const users = response.data.data;
-      console.log(users);
-      console.log(pollConfig);
-
-      console.log(users[0].poll_id, pollConfig.shareCode);
-
-      setVotes(users);
+      setVotes(response.data.data);
     }
     data();
   }, []);
 
-  console.log(pollConfig);
-
   useEffect(() => {
     sessionStorage.getItem("token");
-    const socket = io("https://polldeew32.onrender.com", {
+    const socket = io(BACKEND_URL, {
       auth: {
         token: sessionStorage.getItem("token"),
       },
@@ -58,26 +45,12 @@ export default function PollAdmin() {
     const pollConfi = JSON.parse(localStorage.getItem("pollConfig"));
 
     socket.on("newVotes", (data) => {
-      console.log(data);
-      console.log(data.data);
-      console.log("I think it is our fault");
-      console.log(pollConfi);
-      console.log(
-        pollConfi.shareCode || pollConfi.codelink,
-        data.data.data[0].codelink
-      );
-      console.log(pollConfig);
-
       if (
         data.data.data[0].codelink === pollConfi.shareCode ||
         pollConfi.codelink
       )
         setVotes(data.data.data);
     });
-
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
 
   async function handleCopy() {
@@ -103,14 +76,11 @@ export default function PollAdmin() {
   function yesorno(array, y) {
     return array.filter((item) => item.choice === y).length;
   }
-  console.log("Option");
 
-  console.log([votes, pollConfig.options]);
-  console.log(votes);
   function multiplex(objectsArray, searchString) {
     return objectsArray.filter((item) => {
       try {
-        const parsedChoice = JSON.parse(item.choice); // Double parse to extract the actual array
+        const parsedChoice = JSON.parse(item.choice);
         return parsedChoice.includes(searchString);
       } catch (error) {
         console.error("Error parsing choice:", error);
@@ -118,26 +88,13 @@ export default function PollAdmin() {
       }
     }).length;
   }
-  console.log("Multiple code");
-  console.log(localStorage.getItem("pollConfig"));
-  console.log(JSON.parse(localStorage.getItem("pollConfig")));
-
-  console.log(votes);
-  console.log(pollConfig.options);
-
-  // console.log([
-  //   multiple(votes, pollConfig.options[0]),
-  //   multiple(votes, pollConfig.options[1]),
-  //   multiple(votes, pollConfig.options[2]),
-  //   multiple(votes, pollConfig.options[3]),
-  // ]);
 
   const data = {
     labels:
       pollConfig.polltype === "single choice" ||
       pollConfig.polltype === "multiple choice"
         ? pollConfig.options
-        : ["YES", "NO"], //options
+        : ["YES", "NO"],
     datasets: [
       {
         label: "Poll Results",
@@ -195,8 +152,6 @@ export default function PollAdmin() {
       },
     },
   };
-  console.log("Poll Config");
-  console.log(pollConfig);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-6">
@@ -205,7 +160,6 @@ export default function PollAdmin() {
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
           <div className="text mb-8">
             <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:scale-105 transition-transform duration-300">
-              {/* Open or close voting poll*/}
               <button>
                 <Vote className="w-8 h-8 text-white" />
               </button>
@@ -230,7 +184,6 @@ export default function PollAdmin() {
         </div>
       </div>
 
-      {/* use websockets to get voters */}
       <div className="w-full max-w-4xl mx-auto">
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
           <div className="text-center mb-3">
@@ -259,10 +212,6 @@ export default function PollAdmin() {
                   </span>
                   <span className="text-gray-200 text-xl font-bold truncate flex-1 text-center">
                     {entry.choice}
-                    {/* MOST POSSIBLE ERROR */}
-                    {/* {typeof JSON.parse(entry.choice) == "object"
-                      ? entry.choice
-                      : JSON.parse(entry.choice)} */}
                   </span>
                   <span className="text-gray-300 text-xl font-bold truncate flex-1 text-right">
                     {entry.datevoted || entry.dateviewed}

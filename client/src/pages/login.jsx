@@ -15,12 +15,12 @@ export default function LoginPage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = urlParams.get("token");
-
+  
     if (tokenFromUrl) {
       sessionStorage.setItem("token", tokenFromUrl);
-      navigate("/mainpage");
+      navigate("/mainpage", { replace: true });  // 'replace: true' prevents going back to /login?token=...
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (error) {

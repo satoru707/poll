@@ -14,15 +14,16 @@ export default function RegisterPage() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-
-    if (token) {
-      sessionStorage.setItem("token", token);
-      console.log("Google Auth Token stored:", token);
-      navigate("/mainpage");
+    const tokenFromUrl = urlParams.get("token");
+  
+    if (tokenFromUrl) {
+      // 1. Save the token
+      sessionStorage.setItem("token", tokenFromUrl);
+      
+      // 2. Force navigation to /mainpage
+      navigate("/mainpage", { replace: true });  // 'replace: true' prevents going back to /login?token=...
     }
-  }, []);
-
+  }, [navigate]);
   async function handleGoogleAuth() {
     try {
       const response = await axios.get(`${backendUrl}/auth/google`, {

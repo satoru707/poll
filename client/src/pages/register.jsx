@@ -21,7 +21,7 @@ export default function RegisterPage() {
       console.log("Google Auth Token stored:", token);
       navigate("/mainpage");
     }
-  }, [navigate]);
+  }, []);
 
   async function handleGoogleAuth() {
     try {

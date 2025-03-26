@@ -19,7 +19,7 @@ export default function RegisterPage() {
     if (token) {
       sessionStorage.setItem("token", token);
       console.log("Google Auth Token stored:", token);
-      navigate("/mainpage"); // Navigate after storing the token
+      navigate("/mainpage");
     }
   }, [navigate]);
 
@@ -29,7 +29,7 @@ export default function RegisterPage() {
         withCredentials: true,
       });
       const url = response.data.url;
-      window.location.href = url; // Redirect user to Google login page
+      window.location.href = url;
     } catch (error) {
       console.log("Error while getting Google Auth URL:", error);
     }

@@ -11,14 +11,10 @@ export default function DisplayedHistory() {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
   const email = useContext(Context)[0];
-  //   console.log(email);
   const type = sessionStorage.getItem("htype");
 
   useEffect(() => {
     const type = sessionStorage.getItem("htype");
-    // console.log(type);
-    //delete this
-
     const token = sessionStorage.getItem("token");
     async function gettingit() {
       const response = await axios.post(
@@ -29,10 +25,7 @@ export default function DisplayedHistory() {
           withCredentials: true,
         }
       );
-      //   console.log(response.data.data);
       setHistory(response.data.data);
-      //   console.log("History");
-      //   console.log(history);
     }
     gettingit();
   }, [email]);
@@ -46,7 +39,6 @@ export default function DisplayedHistory() {
   }
 
   function History({ history }) {
-    //issue
     const token = sessionStorage.getItem("token");
     async function handleClick(code) {
       try {
@@ -58,15 +50,8 @@ export default function DisplayedHistory() {
             withCredentials: true,
           }
         );
-        console.log("Error position");
-
-        console.log(response.data);
-
         const pollConfig = response.data.query;
         await localStorage.setItem("pollConfig", JSON.stringify(pollConfig));
-        console.log("local storage");
-        console.log(localStorage.getItem("pollConfig"));
-
         navigate("/poll-admin");
       } catch (error) {
         console.log("error", error);
@@ -76,67 +61,77 @@ export default function DisplayedHistory() {
     function back() {
       navigate("/view-history");
     }
+    
     return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-6">
+      <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4 sm:p-6">
         <HomePage />
         <button
           onClick={back}
-          className="absolute top-6 left-5 bg-white/10 border border-white/20 text-white p-2 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
+          className="absolute top-4 sm:top-6 left-4 sm:left-5 bg-white/10 border border-white/20 text-white p-2 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
           title="Go Back"
         >
-          <ArrowLeft className="w-6 h-6" />
+          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
-        <div className="w-full max-w-5xl max-h-max mx-auto">
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 min-h-96 shadow-2xl">
-            <div className="text-center mb-3">
-              <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:scale-105 transition-transform duration-300">
-                <Vote className="w-8 h-8 text-white" />
+        <div className="w-full max-w-4xl lg:max-w-5xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 min-h-[300px] sm:min-h-[400px] shadow-lg">
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="bg-white/20 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transform hover:scale-105 transition-transform duration-300">
+                <Vote className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">
                 Poll History
               </h3>
-              <p className="text-gray-300 font-semibold">
-                {sessionStorage.getItem("htype")} {history.length} polls
+              <p className="text-gray-300 font-semibold text-sm sm:text-base">
+                {sessionStorage.getItem("htype")} {history?.length} polls
               </p>
             </div>
 
-            <div className="max-h-[400px] overflow-y-scroll scrollbar-hidden">
+            <div className="max-h-[300px] sm:max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
               {history.length > 0 ? (
                 history.map((entry, index) => (
                   <div
                     key={index}
-                    className="flex items-center font-mono justify-between mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-3 mb-2 last:mb-0 shadow-sm"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-3 sm:mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-3 mb-2 last:mb-0 shadow-sm gap-2 sm:gap-4"
                   >
-                    <span className="text-white text-xl font-bold truncate flex-1">
+                    <span className="text-white text-sm sm:text-base lg:text-lg font-bold truncate w-full sm:flex-1">
                       {entry.question || entry.choice}
                     </span>
-                    <span
-                      onClick={handleCopy(entry.codelink)}
-                      className="text-gray-200 ml-7 text-xl font-bold truncate flex-1 text-center"
-                    >
-                      {entry.codelink}
-                    </span>
-                    <span className="text-gray-300 text-xl font-bold truncate flex-1 text-right">
+                    <div className="flex items-center gap-2 w-full sm:w-auto sm:flex-1">
+                      <span className="text-gray-200 text-sm sm:text-base lg:text-lg font-bold truncate">
+                        {entry.codelink}
+                      </span>
+                      <button 
+                        onClick={() => handleCopy(entry.codelink)}
+                        className="text-white hover:text-purple-300 transition-colors"
+                      >
+                        <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+                    </div>
+                    <span className="text-gray-300 text-xs sm:text-sm lg:text-base font-bold truncate w-full sm:w-auto sm:flex-1 text-right">
                       {entry.datecreated || entry.datevoted || entry.dateviewed}
                     </span>
-                    {type == "created" ? (
-                      <span className="text-gray-300 text-xl font-bold truncate flex-1 text-right">
-                        <button onClick={() => handleClick(entry.codelink)}>
-                          <View className="w-8 h-8 text-white" />
+                    <div className="w-full sm:w-auto sm:flex-1 flex justify-end">
+                      {type == "created" ? (
+                        <button 
+                          onClick={() => handleClick(entry.codelink)}
+                          className="text-white hover:text-purple-300 transition-colors"
+                        >
+                          <View className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
                         </button>
-                      </span>
-                    ) : (
-                      <span className="ml-8 text-gray-300 text-xl font-bold truncate flex-1 text-right">
-                        <button onClick={() => navigate("/participate-poll")}>
-                          <View className="w-8 h-8 text-white" />
+                      ) : (
+                        <button 
+                          onClick={() => navigate("/participate-poll")}
+                          className="text-white hover:text-purple-300 transition-colors"
+                        >
+                          <View className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
                         </button>
-                      </span>
-                    )}
+                      )}
+                    </div>
                   </div>
                 ))
               ) : (
-                <div className="flex items-center font-mono justify-between mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-3 mb-2 last:mb-0 shadow-sm bar">
-                  <h2>No poll found</h2>
+                <div className="flex items-center justify-center mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-4 mb-2 last:mb-0 shadow-sm">
+                  <h2 className="text-gray-300 text-sm sm:text-base">No poll found</h2>
                 </div>
               )}
             </div>

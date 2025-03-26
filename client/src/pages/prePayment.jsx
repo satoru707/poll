@@ -17,11 +17,9 @@ export default function PaymentTile() {
   }
 
   async function handleClick() {
-    // Handle payment logic here
     setIsLoading(true);
     console.log("Payment button clicked");
     try {
-      // Step 1: Initialize Payment
       const response = await axios.post(
         `${backendUrl}/initialize-payment`,
         {
@@ -33,7 +31,6 @@ export default function PaymentTile() {
         }
       );
 
-      // Step 2: Redirect to Paystack Payment Page
       const { authorization_url } = response.data.data;
       console.log(response.data);
 
@@ -80,22 +77,12 @@ export default function PaymentTile() {
                 withCredentials: true,
               }
             );
-            const response = await axios.post(
-              `${backendUrl}/checkPremium`,
-              { user: user },
-              {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-              }
-            );
-            sessionStorage.setItem("premium", response.data.query);
+            sessionStorage.setItem("premium", 'true');
 
-            // Handle successful payment (e.g., update user subscription)
           } else {
             alert("Payment failed");
           }
 
-          // Clear the reference parameter from the URL
         } catch (error) {
           console.error("Error verifying payment:", error);
           alert("Payment verification failed. Please contact support.");
@@ -111,7 +98,6 @@ export default function PaymentTile() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex flex-col items-center justify-center p-6">
-      {/* Back Button */}
       <button
         onClick={back}
         className="absolute top-6 left-5 bg-white/10 border border-white/20 text-white p-2 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
@@ -120,7 +106,6 @@ export default function PaymentTile() {
         <ArrowLeft className="w-6 h-6" />
       </button>
 
-      {/* Payment Tile */}
       <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3 max-w-2xl mx-auto flex flex-col items-center justify-center space-y-8">
         <div className="w-full justify-center bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
           <div className="text-center mb-8">
@@ -130,7 +115,7 @@ export default function PaymentTile() {
             <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
               Yearly Sub
             </h1>
-            <p className="text-gray-300">Just pay nigga</p>
+            <p className="text-gray-300">Just pay na</p>
           </div>
           <button
             onClick={handleClick}

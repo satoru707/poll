@@ -8,10 +8,10 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-  // Handle Google Auth Token from URL
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = urlParams.get("token");
@@ -22,7 +22,15 @@ export default function LoginPage() {
     }
   }, [navigate]);
 
-  // Handle Login Submission
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
@@ -37,17 +45,15 @@ export default function LoginPage() {
         sessionStorage.setItem("token", response.data.token);
         navigate("/mainpage");
       }
-    } catch (error) {
-      console.error("Login error:", error.response?.data?.message || error.message);
-      alert(error.response?.data?.message || "Login failed. Please try again.");
+    } catch {
+      setError('Invalid username or password!');
+      setEmail('')
+      setPassword('')
     } finally {
-      setEmail("");
-      setPassword("");
       setIsLoading(false);
     }
   }
 
-  // Handle Google OAuth Login
   async function handleGoogleAuth() {
     try {
       const response = await axios.get(`${BACKEND_URL}/auth/google`, {
@@ -56,7 +62,7 @@ export default function LoginPage() {
       window.location.href = response.data.url;
     } catch (error) {
       console.error("Google Auth error:", error);
-      alert("Google authentication failed. Please try again.");
+      setError("Google authentication failed. Please try again.");
     }
   }
 
@@ -96,6 +102,12 @@ export default function LoginPage() {
                 required
               />
             </div>
+
+            {error && (
+              <div className="text-red-400 text-sm mt-1 animate-fade-in">
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"

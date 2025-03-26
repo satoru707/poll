@@ -34,13 +34,15 @@ export default function ViewPoll() {
         console.log("Error position");
 
         console.log(response.data);
-
-        const pollConfig = response.data.query;
+        if(response.data.query) {
+             const pollConfig = response.data.query;
         localStorage.setItem("pollConfig", JSON.stringify(pollConfig));
         console.log("local storage");
         console.log(localStorage.getItem("pollConfig"));
 
         navigate("/poll-admin");
+        }
+     
       } catch (error) {
         console.log("error", error);
       }
@@ -62,21 +64,22 @@ export default function ViewPoll() {
       localStorage.setItem("pollConfig", JSON.stringify(pollData));
       console.log(pollDataquery);
       if (!pollData) {
-        navigate("/participate-poll");
+        setPin('')
       } else {
         console.log(pollData);
         setQuery(pollData);
+        setState(true);
       }
     } catch (error) {
       console.log(error);
     }
-    setState(true);
+
   }
 
   return (
     <>
       {state ? null : (
-        <div className="min-h-screen w-full bg-gradient-to-br  from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-around p-6">
+        <div className="min-h-screen w-full bg-gradient-to-br  from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-6">
           <HomePage />
           <button
             onClick={back}
@@ -85,11 +88,10 @@ export default function ViewPoll() {
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <div className="w-9/12 max-w-4xl mx-auto flex  justify-around space-x-8 ">
-            <div className="w-1/3 bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
-              <div className="text-center mb-8">
-                <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <button onClick={handlePin}>
+          <div className="w-10/12 md:w-3/4 lg:w-1/2 xl:w-1/3 max-w-2xl mx-auto flex flex-col items-center justify-center space-y-8">
+        <div className="w-10/12 justify-center bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+          <div className="text-center mb-8">
+            <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"> <button onClick={handlePin}>
                     <Lock className="w-8 h-8 text-white" />
                   </button>
                 </div>

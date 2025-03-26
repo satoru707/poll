@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Navigate } from "react-router-dom";
+import { LoaderIcon } from "lucide-react";
 
 export default function PrivateRoute({ children }) {
   const [isValidToken, setIsValidToken] = useState(false);
@@ -38,9 +39,11 @@ export default function PrivateRoute({ children }) {
 
   if (isLoading) {
     return (
-      <div>
-        <h3>Loading...</h3>
+      <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4 sm:p-6">
+      <div className="fixed inset-0 flex items-center justify-center">
+        <LoaderIcon className="h-10 w-10 z-20 sm:h-10 sm:w-10 bg-white/10 border border-white/20 text-white p-2 rounded-full hover:bg-white/20 transition-transform hover:scale-105" />
       </div>
+    </div>
     );
   }
 

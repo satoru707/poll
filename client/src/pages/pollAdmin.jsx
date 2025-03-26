@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Pie, Doughnut } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { User, Vote, HomeIcon, Copy } from "lucide-react";
+import { Vote, Copy } from "lucide-react";
 import HomePage from "../components/home";
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -33,7 +33,6 @@ export default function PollAdmin() {
   }, []);
 
   useEffect(() => {
-    sessionStorage.getItem("token");
     const socket = io(BACKEND_URL, {
       auth: {
         token: sessionStorage.getItem("token"),
@@ -134,6 +133,7 @@ export default function PollAdmin() {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom",
@@ -154,75 +154,112 @@ export default function PollAdmin() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-6">
+    <div className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex flex-col lg:flex-row items-center justify-center p-4 sm:p-6 gap-4 sm:gap-6">
       <HomePage />
-      <div className="w-full max-w-md mx-auto">
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-          <div className="text mb-8">
-            <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:scale-105 transition-transform duration-300">
-              <button>
-                <Vote className="w-8 h-8 text-white" />
+      
+      <div className="w-full max-w-md flex flex-col">
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg flex-1 flex flex-col">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="bg-white/20 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transform hover:scale-105 transition-transform duration-300">
+              <button onClick={handleCopy}>
+                <Vote className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
               </button>
+            </div>     
+          
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+                User{" "}
+                {pollConfig.user_id ||
+                  pollConfig.email?.substring(0, pollConfig.email.length - 10)}
+                's Poll
+              </h3>
+              <div className="flex items-center gap-1">
+                <span className="text-sm sm:text-base text-gray-300">{copy}</span>
+                <button 
+                  onClick={handleCopy} 
+                  className="hover:text-white transition-colors"
+                  aria-label="Copy poll code"
+                >
+                  <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              </div>
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">
-              {" "}
-              User{" "}
-              {pollConfig.user_id ||
-                pollConfig.email?.substring(0, pollConfig.email.length - 10)}
-              's Poll
-              <span className="font-semibold" onClick={handleCopy}>
-                <Copy className="w-4 h-4 text-white" />
-                {copy}
-              </span>
-            </h3>
-            <p className="text-gray-300 font-semibold">{pollConfig.question}</p>
+
+            <p className="text-gray-300 font-semibold text-sm sm:text-base mb-4">
+              {pollConfig.question}
+            </p>
           </div>
 
-          <div className="relative">
-            <Doughnut data={data} options={options} />
+       
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-full h-56 sm:h-72">
+              <Doughnut 
+                data={data} 
+                options={{
+                  ...options,
+                  plugins: {
+                    ...options.plugins,
+                    legend: {
+                      ...options.plugins.legend,
+                      labels: {
+                        ...options.plugins.legend.labels,
+                        font: {
+                          size: window.innerWidth < 640 ? 12 : 14
+                        }
+                      }
+                    }
+                  }
+                }} 
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="w-full max-w-4xl mx-auto">
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
-          <div className="text-center mb-3">
-            <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transform hover:scale-105 transition-transform duration-300">
-              <Vote className="w-8 h-8 text-white" />
+   
+      <div className="w-full max-w-4xl flex flex-col">
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg flex-1 flex flex-col">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="bg-white/20 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transform hover:scale-105 transition-transform duration-300">
+              <Vote className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">Poll Votes</h3>
-            <p className="text-gray-300 font-semibold">
-              {votes.length} {votes.length == 1 ? "view" : "views"},{" "}
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
+              Poll Votes
+            </h3>
+            <p className="text-gray-300 font-semibold text-sm sm:text-base">
+              {votes.length} {votes.length === 1 ? "view" : "views"},{" "}
               {votes.filter((entry) => entry.datevoted).length}{" "}
-              {votes.filter((entry) => entry.datevoted).length == 1
+              {votes.filter((entry) => entry.datevoted).length === 1
                 ? "vote"
                 : "votes"}
             </p>
           </div>
 
-          <div className="max-h-[400px] overflow-y-scroll scrollbar-hide">
-            {votes.length > 0 ? (
-              votes.map((entry, index) => (
-                <div
-                  key={index}
-                  className="flex items-center font-mono justify-between mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-3 mb-2 last:mb-0 shadow-sm"
-                >
-                  <span className="text-white text-xl font-bold truncate flex-1">
-                    {entry.email}
-                  </span>
-                  <span className="text-gray-200 text-xl font-bold truncate flex-1 text-center">
-                    {entry.choice}
-                  </span>
-                  <span className="text-gray-300 text-xl font-bold truncate flex-1 text-right">
-                    {entry.datevoted || entry.dateviewed}
-                  </span>
+          <div className="flex-1 overflow-hidden">
+            <div className="max-h-[300px] sm:max-h-[400px] h-full overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+              {votes.length > 0 ? (
+                votes.map((entry, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-3 sm:mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-3 mb-2 last:mb-0 shadow-sm gap-2 sm:gap-4"
+                  >
+                    <span className="text-white text-sm sm:text-base font-bold truncate w-full sm:flex-1">
+                      {entry.email}
+                    </span>
+                    <span className="text-gray-200 text-sm sm:text-base font-bold truncate w-full sm:w-auto sm:flex-1 text-center">
+                      {entry.choice}
+                    </span>
+                    <span className="text-gray-300 text-xs sm:text-sm font-bold truncate w-full sm:w-auto sm:flex-1 text-right">
+                      {entry.datevoted || entry.dateviewed}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-full bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-4 shadow-sm">
+                  <h2 className="text-gray-300 text-sm sm:text-base">No votes yet!</h2>
                 </div>
-              ))
-            ) : (
-              <div className="flex items-center font-mono justify-between mt-4 bg-white/5 hover:bg-white/10 transition-colors duration-200 rounded-lg p-3 mb-2 last:mb-0 shadow-sm bar">
-                <h2>No votes yet!</h2>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

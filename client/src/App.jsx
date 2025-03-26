@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router";
 import LoginForm from "./pages/login";
 import RegisterForm from "./pages/register";
@@ -11,10 +11,27 @@ import PaymentTile from "./pages/prePayment.jsx";
 import Context from "./context/context.js";
 import ViewPoll from "./pages/viewPoll.jsx";
 import DisplayedHistory from "./pages/viewHistory.jsx";
+import axios from "axios";
 
 export default function App() {
-  const user = useContext(Context);
-  console.log(user);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+  const user = useContext(Context)[0]
+  useEffect(() => {
+    const token = sessionStorage.getItem('token')
+    async function a() {
+       const response = await axios.post(
+    `${backendUrl}/checkPremium`,
+    { user: user },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    }
+  );
+  console.log(response.data.query);
+ response.data.query == 'true' ?  sessionStorage.setItem("premium", 'true'): null
+      }
+  a()})
+  
 
   return (
   

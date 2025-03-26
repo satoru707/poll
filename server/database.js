@@ -2,51 +2,48 @@ import pg from "pg";
 const { Pool } = pg;
 import 'dotenv/config'
 
-// const pool = new Pool({
-//   host: process.env.DB_HOST || 'localhost',
-//   user: process.env.DB_USER || 'postgres',
-//   password: process.env.DB_PASSWORD || 'gunnawunna',
-//   database: process.env.DB || 'projects',
-//   port: process.env.DB_PORT || 5432,
-//   ssl: {
-//     rejectUnauthorized: true,
-//     ca: `-----BEGIN CERTIFICATE-----
-// MIIETTCCArWgAwIBAgIUbCkwc6ISFeMO+Kd9WWrlxITY7gMwDQYJKoZIhvcNAQEM
-// BQAwQDE+MDwGA1UEAww1ZjAzZDI3NmYtYWI1OC00MDBmLTg2NGEtYzkxNmU4ZmQ3
-// OThjIEdFTiAxIFByb2plY3QgQ0EwHhcNMjUwMzE2MDk0NzQwWhcNMzUwMzE0MDk0
-// NzQwWjBAMT4wPAYDVQQDDDVmMDNkMjc2Zi1hYjU4LTQwMGYtODY0YS1jOTE2ZThm
-// ZDc5OGMgR0VOIDEgUHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCC
-// AYoCggGBANa8XkxGSCGMzcJ7+bP7dBdTfN+3GnfYIo6iMjvwLgiSdJkmUgNHPme6
-// XRNPJFz9dJ8mlm8tGs2h5u/RfIWfn/S61yS/cY5Eg2qFeTtwyCDgCRPGKUhu98Dk
-// 1tKiDuLQ82IlxqhmtBDGnTnf6mTgsN47O5HVUmCXJ57Ha91WGe63IRg42/9Bieq1
-// cRgTApZyhc8GeJS1nN/78mma3JSeBFxEWiBtkjRMZh6Nb8UsQRRhiWooJ3QYeE97
-// AH7cVPsGPAubrangjkkfRDPl1X8Mjv42HMXzLihai6FLkUG8dvfmzeF9VkyeEqwr
-// n7H3jkEpqIIZm9jp6d2+ee2Y/KWaxvSq1z/Kbua5lGslWD7//6wkXHPEliP3+Iva
-// I6p12nuwrpHZqaGDf89eS49iid94bBo3z/4bYv3sNyxUL+dN3cL76YT/WHywMFEg
-// s81QWCCTY2TeUMlAf7QICWkO8EivlibnGXRnbjAdj5OFv8HbdQ1VyfEuE9JHrjuv
-// MQGbPfc2tQIDAQABoz8wPTAdBgNVHQ4EFgQUo62P0wpsFQqaFbCz9h32zk8F1XQw
-// DwYDVR0TBAgwBgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGB
-// AED3YKq68IimBwijNyJHqTejDl9oaX3npZnS+K9PR/JJAnffkOyVzWHn3uvi0nrv
-// MhPV8UXEnfmiLXzo1btwbwB/Yi/a7xEvwQoLVrGUaOT6Bl5weiqUfVNzaZtq5qiI
-// KdvdT4cybUnFZCgADjXppuWk2t9bgLQ5pIQcuvgIi8r+52EsJP1UJP7o8ZMpkEPQ
-// KXOKtQMu64/wO9qpCN4HLACMNaHt6BeL9cAd4RPgjV/sK8AVpuvz3mLfgq8cxWJK
-// 6HPOR41ojvMaT0t5O4YvJBJS72wf2P9z0tTLLWFy7125eCOSlizNaQ9PEa6Rl0qm 
-// VFPVODoPqP0bX6EaZvUHodU6VgowQjZWA2QguXiBPCTV76alvUh+N3nolIKe2TZP
-// 0D59YWwTDyH5LCNUpaLqGjEfaSC5W+zt9HUvNCE4oJa0buHwhStbheLYOLO8oYiF
-// 55xrnEU2a48bxCbWP4INapFRWmzFjcx/znyFrkxESlyl1wPsgGE8ZK9M8BaIbGex
-// RQ==
-// -----END CERTIFICATE-----
-// `
-//   }
-// }); 
 
 
 const pool = new Pool({
-  host: 'localhost',
-  user: 'postgres',
-  password: 'gunnawunna',
-  database: 'projects',
-  port: 5432})
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'gunnawunna',
+  database: process.env.DB_NAME || 'projects',
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.DB_SSL === 'true' ? 
+  { rejectUnauthorized: false,
+    ca: `-----BEGIN CERTIFICATE-----
+    // MIIETTCCArWgAwIBAgIUbCkwc6ISFeMO+Kd9WWrlxITY7gMwDQYJKoZIhvcNAQEM
+    // BQAwQDE+MDwGA1UEAww1ZjAzZDI3NmYtYWI1OC00MDBmLTg2NGEtYzkxNmU4ZmQ3
+    // OThjIEdFTiAxIFByb2plY3QgQ0EwHhcNMjUwMzE2MDk0NzQwWhcNMzUwMzE0MDk0
+    // NzQwWjBAMT4wPAYDVQQDDDVmMDNkMjc2Zi1hYjU4LTQwMGYtODY0YS1jOTE2ZThm
+    // ZDc5OGMgR0VOIDEgUHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCC
+    // AYoCggGBANa8XkxGSCGMzcJ7+bP7dBdTfN+3GnfYIo6iMjvwLgiSdJkmUgNHPme6
+    // XRNPJFz9dJ8mlm8tGs2h5u/RfIWfn/S61yS/cY5Eg2qFeTtwyCDgCRPGKUhu98Dk
+    // 1tKiDuLQ82IlxqhmtBDGnTnf6mTgsN47O5HVUmCXJ57Ha91WGe63IRg42/9Bieq1
+    // cRgTApZyhc8GeJS1nN/78mma3JSeBFxEWiBtkjRMZh6Nb8UsQRRhiWooJ3QYeE97
+    // AH7cVPsGPAubrangjkkfRDPl1X8Mjv42HMXzLihai6FLkUG8dvfmzeF9VkyeEqwr
+    // n7H3jkEpqIIZm9jp6d2+ee2Y/KWaxvSq1z/Kbua5lGslWD7//6wkXHPEliP3+Iva
+    // I6p12nuwrpHZqaGDf89eS49iid94bBo3z/4bYv3sNyxUL+dN3cL76YT/WHywMFEg
+    // s81QWCCTY2TeUMlAf7QICWkO8EivlibnGXRnbjAdj5OFv8HbdQ1VyfEuE9JHrjuv
+    // MQGbPfc2tQIDAQABoz8wPTAdBgNVHQ4EFgQUo62P0wpsFQqaFbCz9h32zk8F1XQw
+    // DwYDVR0TBAgwBgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGB
+    // AED3YKq68IimBwijNyJHqTejDl9oaX3npZnS+K9PR/JJAnffkOyVzWHn3uvi0nrv
+    // MhPV8UXEnfmiLXzo1btwbwB/Yi/a7xEvwQoLVrGUaOT6Bl5weiqUfVNzaZtq5qiI
+    // KdvdT4cybUnFZCgADjXppuWk2t9bgLQ5pIQcuvgIi8r+52EsJP1UJP7o8ZMpkEPQ
+    // KXOKtQMu64/wO9qpCN4HLACMNaHt6BeL9cAd4RPgjV/sK8AVpuvz3mLfgq8cxWJK
+    // 6HPOR41ojvMaT0t5O4YvJBJS72wf2P9z0tTLLWFy7125eCOSlizNaQ9PEa6Rl0qm 
+    // VFPVODoPqP0bX6EaZvUHodU6VgowQjZWA2QguXiBPCTV76alvUh+N3nolIKe2TZP
+    // 0D59YWwTDyH5LCNUpaLqGjEfaSC5W+zt9HUvNCE4oJa0buHwhStbheLYOLO8oYiF
+    // 55xrnEU2a48bxCbWP4INapFRWmzFjcx/znyFrkxESlyl1wPsgGE8ZK9M8BaIbGex
+    // RQ==
+    // -----END CERTIFICATE-----
+    // `
+      } : false
+
+});
+
+
   
 const time = new Date();
 const date = time.toLocaleString("en-US", {

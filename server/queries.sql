@@ -14,7 +14,7 @@ CREATE TABLE pollDataC (
     codeLink TEXT UNIQUE,
     dateCreated TIMESTAMP,
     user_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE pollDataP (

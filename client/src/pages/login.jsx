@@ -18,7 +18,7 @@ export default function LoginPage() {
   
     if (tokenFromUrl) {
       sessionStorage.setItem("token", tokenFromUrl);
-      navigate("/mainpage", { replace: true });  // 'replace: true' prevents going back to /login?token=...
+      navigate("/mainpage", { replace: true }); 
     }
   }, [navigate]);
 

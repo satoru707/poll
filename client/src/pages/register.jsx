@@ -17,11 +17,8 @@ export default function RegisterPage() {
     const tokenFromUrl = urlParams.get("token");
   
     if (tokenFromUrl) {
-      // 1. Save the token
       sessionStorage.setItem("token", tokenFromUrl);
-      
-      // 2. Force navigation to /mainpage
-      navigate("/mainpage", { replace: true });  // 'replace: true' prevents going back to /login?token=...
+      navigate("/mainpage", { replace: true });  
     }
   }, [navigate]);
   async function handleGoogleAuth() {

@@ -56,7 +56,7 @@ app.use(
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = `${FRONTEND_URL}/auth/google/callback`;
+const REDIRECT_URI = `${BACKEND_URL}/auth/google/callback`;
 const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
 // Paystack key
@@ -88,7 +88,6 @@ app.post("/initialize-payment", authenticateToken, async (req, res) => {
   }
 });
 
-// Verify Payment
 app.get("/verify-payment/:reference", authenticateToken, async (req, res) => {
   const { reference } = req.params;
 

@@ -20,7 +20,7 @@ export default function LoginPage() {
       sessionStorage.setItem("token", tokenFromUrl);
       navigate("/mainpage");
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     if (error) {
